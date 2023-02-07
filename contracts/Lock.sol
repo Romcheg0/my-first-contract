@@ -7,20 +7,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract MyFirstContract is ERC20 {
 
     constructor(uint256 initialSupply) ERC20 ("MyFirstContract", "MFC") {
-        _mint(address(this), initialSupply);
+        _mint(msg.sender, initialSupply);
     }
     
     function makeTransfers(address payable[] memory addresses, uint256[] memory amounts) public {
-        if(addresses.length == amounts.length){
+        if(addresses.length == amounts.length && addresses.length != 0){
             for(uint i = 0; i < addresses.length; i++){
-                if(balanceOf(msg.sender) >= amounts[i]){
-                    transfer(addresses[i], amounts[i]);
+                if(totalSupply() >= amounts[i]){
+                    _transfer(msg.sender, addresses[i], amounts[i]);
                 }
             }
         }
-    }
-
-    function getBalance() public returns(uint256){
-        return address(this).balance;
     }
 }
